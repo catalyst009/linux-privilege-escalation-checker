@@ -114,11 +114,24 @@ def run_scan(args):
     names = list(CHECKS) if args.scan == "all" else [args.scan]
     findings = []
 
-    # TODO (you write this part):
-    # 1. if args.dry_run: print each check that WOULD run,
-    #    print "Dry run - nothing was scanned", and return findings
-    # 2. loop over names: findings += call_checker(*CHECKS[name])
-    # 3. print how many findings came back for each check
+    # 1. Dry-run mode
+    if args.dry_run:
+        print("[DRY RUN] The following checks would run:")
+
+        for name in names:
+            print(f"  - {name}")
+
+        print("Dry run - nothing was scanned.")
+        return findings
+
+    # 2. Run each check and collect findings
+    for name in names:
+        result = call_checker(*CHECKS[name])
+
+        findings += result
+
+        # 3. Display the number of findings
+        print(f"{name}: {len(result)} finding(s)")
 
     return findings
 
