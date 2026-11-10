@@ -218,3 +218,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Linux Privilege Escalation Checker
+# Generated reports
+output/*
+!output/.gitkeep
+
+# Sensitive files
+*.key
+*.pem
+secrets.json
+
+# Temporary files
+*.tmp
+*.bak
