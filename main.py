@@ -1,5 +1,14 @@
 import argparse
+import importlib
 import platform
+import socket
+
+
+CHECKS = {
+    "sudo": ("sudo_checker", "check_sudo"),
+    "suid": ("suid_checker", "check_suid"),
+    "cron": ("cron_checker", "check_cron"),
+}
 
 
 def build_parser():
@@ -60,6 +69,27 @@ def confirm_authorization():
     return True
 
 
+def confirm_scope(target):
+    allowed = ["localhost", "127.0.0.1", socket.gethostname()]
+
+    if target not in allowed:
+        print(f"\nError: '{target}' is out of scope.")
+        print("This tool only audits the local machine.")
+        return False
+
+    print(f"\nTarget scope : {target}")
+    print(f"This machine : {socket.gethostname()}")
+
+    typed = input("Re-type the target to confirm: ").strip()
+
+    if typed != target:
+        print("\nScope mismatch. Exiting...")
+        return False
+
+    print("\nScope confirmed.")
+    return True
+
+
 def display_menu():
     print("\n========== MAIN MENU ==========")
     print("1. System Information")
@@ -71,12 +101,41 @@ def display_menu():
     print("===============================")
 
 
+def call_checker(module_name, func_name):
+    try:
+        module = importlib.import_module(module_name)
+        return getattr(module, func_name)()
+    except (ImportError, AttributeError):
+        print(f"[!] {module_name}.{func_name} not available yet - skipping")
+        return []
+
+
+def run_scan(args):
+    names = list(CHECKS) if args.scan == "all" else [args.scan]
+    findings = []
+
+    # TODO (you write this part):
+    # 1. if args.dry_run: print each check that WOULD run,
+    #    print "Dry run - nothing was scanned", and return findings
+    # 2. loop over names: findings += call_checker(*CHECKS[name])
+    # 3. print how many findings came back for each check
+
+    return findings
+
+
 def main(args):
     if platform.system() != "Linux":
         print("Error: This tool only supports Linux systems.")
         return
 
     if not confirm_authorization():
+        return
+
+    if not confirm_scope(args.target):
+        return
+
+    if args.scan:
+        run_scan(args)
         return
 
     while True:
