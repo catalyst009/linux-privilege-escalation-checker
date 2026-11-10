@@ -1,5 +1,28 @@
-
+import argparse
 import platform
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        description="Linux Privilege Escalation Checker (authorized audits only)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  python3 main.py                      (interactive menu)
+  python3 main.py --scan all
+  python3 main.py --scan sudo --format json
+  python3 main.py --scan suid --dry-run
+  python3 main.py --scan all --output reports/""",
+    )
+    parser.add_argument("--scan", choices=["all", "sudo", "suid", "cron"], default=None,
+                        help="run a scan directly (omit for the interactive menu)")
+    parser.add_argument("--target", default="localhost",
+                        help="hostname you are authorized to audit (default: localhost)")
+    parser.add_argument("--format", choices=["txt", "json"], default="txt")
+    parser.add_argument("--output", default="output",
+                        help="report directory (default: output/)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="show what would run, scan nothing")
+    return parser
 
 
 def display_disclaimer():
@@ -48,7 +71,7 @@ def display_menu():
     print("===============================")
 
 
-def main():
+def main(args):
     if platform.system() != "Linux":
         print("Error: This tool only supports Linux systems.")
         return
@@ -85,7 +108,8 @@ def main():
 
 
 if __name__ == "__main__":
+    args = build_parser().parse_args()
     try:
-        main()
+        main(args)
     except KeyboardInterrupt:
         print("\n\nEmergency stop activated. Program terminated.")
