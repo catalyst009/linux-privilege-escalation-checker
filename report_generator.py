@@ -45,7 +45,8 @@ def write_txt(path, system_info, findings):
 
         f.write(f"\nFINDINGS ({len(findings)})\n")
         for number, item in enumerate(findings, 1):
-            f.write(f"\n[{number}] {item.get('check', 'Unknown')}\n")
+            f.write(f"\n[{number}] {item.get('category', 'Unknown')}: {item.get('item', 'Unknown')}\n")
             f.write(f"    Risk: {item.get('risk', 'N/A')}\n")
-            f.write(f"    Details: {item.get('description', 'N/A')}\n")
+            f.write(f"    Details: {item.get('details', 'N/A')}\n")
+            f.write(f"    Reason: {item.get('reason', 'N/A')}\n")
             f.write(f"    Fix: {item.get('recommendation', 'N/A')}\n")
