@@ -1,4 +1,3 @@
-
 import argparse
 import importlib
 import platform
@@ -6,6 +5,10 @@ import socket
 
 # Member 3 - Risk Assessment Module
 from risk_assessment import assess_risks
+
+# Member 4 - Report Generation
+from report_generator import generate_report
+from scanner import get_system_info
 
 
 CHECKS = {
@@ -191,6 +194,15 @@ def run_scan(args):
     print(f"Medium Risk    : {medium}")
     print(f"Low Risk       : {low}")
     print("==================================")
+
+    # 5. Member 4 - Report Generation
+    try:
+        report_path = generate_report(
+            get_system_info(), assessed_findings, args.output, args.format
+        )
+        print(f"\nReport saved to: {report_path}")
+    except (OSError, ValueError) as error:
+        print(f"[!] Could not save report: {error}")
 
     return assessed_findings
 
