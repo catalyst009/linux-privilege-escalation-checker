@@ -35,6 +35,9 @@ EXPECTED_SGID = {
         {"cron", "cronie", "systemd-cron"},
         "crontab", 0o2755
     ),
+    "/usr/bin/dotlockfile": (
+        {"liblockfile-bin"}, "mail", 0o2755
+    ),
 }
 
 
