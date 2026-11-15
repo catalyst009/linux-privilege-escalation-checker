@@ -1,7 +1,11 @@
+
 import argparse
 import importlib
 import platform
 import socket
+
+# Member 3 - Risk Assessment Module
+from risk_assessment import assess_risks
 
 
 CHECKS = {
@@ -16,21 +20,44 @@ def build_parser():
         description="Linux Privilege Escalation Checker (authorized audits only)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  python3 main.py                      (interactive menu)
+  python3 main.py
   python3 main.py --scan all
   python3 main.py --scan sudo --format json
   python3 main.py --scan suid --dry-run
   python3 main.py --scan all --output reports/""",
     )
-    parser.add_argument("--scan", choices=["all", "sudo", "suid", "cron"], default=None,
-                        help="run a scan directly (omit for the interactive menu)")
-    parser.add_argument("--target", default="localhost",
-                        help="hostname you are authorized to audit (default: localhost)")
-    parser.add_argument("--format", choices=["txt", "json"], default="txt")
-    parser.add_argument("--output", default="output",
-                        help="report directory (default: output/)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="show what would run, scan nothing")
+
+    parser.add_argument(
+        "--scan",
+        choices=["all", "sudo", "suid", "cron"],
+        default=None,
+        help="run a scan directly (omit for interactive menu)"
+    )
+
+    parser.add_argument(
+        "--target",
+        default="localhost",
+        help="hostname you are authorized to audit (default: localhost)"
+    )
+
+    parser.add_argument(
+        "--format",
+        choices=["txt", "json"],
+        default="txt"
+    )
+
+    parser.add_argument(
+        "--output",
+        default="output",
+        help="report directory (default: output/)"
+    )
+
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="show what would run, scan nothing"
+    )
+
     return parser
 
 
@@ -38,6 +65,7 @@ def display_disclaimer():
     print("\n" + "=" * 55)
     print("       LINUX PRIVILEGE ESCALATION CHECKER")
     print("=" * 55)
+
     print("\nLEGAL DISCLAIMER")
     print("This tool is for educational and authorized")
     print("security auditing purposes only.")
@@ -105,6 +133,7 @@ def call_checker(module_name, func_name):
     try:
         module = importlib.import_module(module_name)
         return getattr(module, func_name)()
+
     except (ImportError, AttributeError):
         print(f"[!] {module_name}.{func_name} not available yet - skipping")
         return []
@@ -124,16 +153,46 @@ def run_scan(args):
         print("Dry run - nothing was scanned.")
         return findings
 
-    # 2. Run each check and collect findings
+    # 2. Run security checkers
+    print("\n========== SCANNING ==========")
+
     for name in names:
         result = call_checker(*CHECKS[name])
 
         findings += result
 
-        # 3. Display the number of findings
         print(f"{name}: {len(result)} finding(s)")
 
-    return findings
+    # 3. Member 3 - Risk Assessment
+    assessed_findings = assess_risks(findings)
+
+    print("\n========== RISK ASSESSMENT ==========")
+
+    if not assessed_findings:
+        print("No findings to assess.")
+
+    for index, finding in enumerate(assessed_findings, 1):
+        print(f"\nFinding {index}")
+        print(f"Category: {finding.get('category', 'Unknown')}")
+        print(f"Item: {finding.get('item', 'Unknown')}")
+        print(f"Risk Level: {finding['risk']}")
+        print(f"Reason: {finding['reason']}")
+        print(f"Recommendation: {finding['recommendation']}")
+        print("-" * 45)
+
+    # 4. Risk Summary
+    high = sum(1 for f in assessed_findings if f["risk"] == "High")
+    medium = sum(1 for f in assessed_findings if f["risk"] == "Medium")
+    low = sum(1 for f in assessed_findings if f["risk"] == "Low")
+
+    print("\n========== RISK SUMMARY ==========")
+    print(f"Total Findings : {len(assessed_findings)}")
+    print(f"High Risk      : {high}")
+    print(f"Medium Risk    : {medium}")
+    print(f"Low Risk       : {low}")
+    print("==================================")
+
+    return assessed_findings
 
 
 def main(args):
@@ -181,7 +240,9 @@ def main(args):
 
 if __name__ == "__main__":
     args = build_parser().parse_args()
+
     try:
         main(args)
+
     except KeyboardInterrupt:
         print("\n\nEmergency stop activated. Program terminated.")
