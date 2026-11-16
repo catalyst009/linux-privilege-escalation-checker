@@ -36,7 +36,7 @@ def check_suid(target_paths=None):
                         findings.append({
                             "category": f"{perm_type} Binary",
                             "item": filepath,
-                            "details": f"Non-standard {perm_type} bit set (permissions: {oct(file_stat.st_mode)[-4:]}).",
+                            "details": f"{perm_type} bit set (permissions: {oct(file_stat.st_mode)[-4:]}).",
                             "raw_identifier": filename
                         })
                 except (PermissionError, FileNotFoundError):
