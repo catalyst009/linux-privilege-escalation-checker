@@ -129,3 +129,26 @@ All checks are read-only and do not change the system.
 - Press **Ctrl+C** at any time to stop the tool.
 - Answer **no** at the authorization prompt to exit before any scan starts.
 - If the tool behaves unexpectedly, stop it, do not run it again, and tell the system owner.
+
+## 14. Responsible Disclosure
+
+If this tool finds a weakness on a system, or you find a bug in the tool itself, please follow these steps.
+
+### Who to Tell
+- **A weakness found on a system:** tell the owner or administrator of that system. This is the person who gave you written permission to scan it.
+- **A weakness in software (for example, a SUID program):** tell the maintainer or vendor of that software through their security contact.
+- **A bug or security problem in this tool:** open a private report on this repository's GitHub page (Security tab), or contact the repository owner.
+- **A lab or class system:** tell your lecturer or lab supervisor.
+
+### When to Tell
+- Report **High** risk findings as soon as possible, ideally within 24 to 48 hours.
+- Report **Medium** and **Low** findings together with the full report, within one week.
+- Give the owner reasonable time to fix the problem (a common period is up to 90 days) before anyone talks about it in public.
+
+### How to Report
+1. Write the report in private (for example, email or a direct message). Do not post it in a public place.
+2. Include the date and time of the scan, the check that found the problem (sudo, SUID, or cron), the risk level, a short explanation, and the recommended fix from the report.
+3. Send only what is needed. Do not include passwords, personal data, or full file contents.
+4. Keep the report file in the local output folder and share it only with the system owner.
+5. Do not try to exploit the weakness to "prove" it. The tool's findings show a potential risk, not a confirmed vulnerability.
+6. Delete your copy of the report when the owner has fixed the problem and you no longer need it.
