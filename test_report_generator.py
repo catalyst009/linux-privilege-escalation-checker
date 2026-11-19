@@ -34,6 +34,22 @@ class TestGenerateReport(unittest.TestCase):
             self.assertIn("Risk: N/A", content)
             self.assertIn("Fix: N/A", content)
 
+    def test_real_finding_keys_in_txt(self):
+        with tempfile.TemporaryDirectory() as folder:
+            findings = [{
+                "category": "SUID Binary",
+                "item": "/usr/bin/ntfs-3g",
+                "risk": "Medium",
+                "details": "SUID bit set (permissions: 4755).",
+                "reason": "Requires further security review.",
+                "recommendation": "Confirm the package is required.",
+            }]
+            path = generate_report({"hostname": "kali"}, findings, folder, "txt")
+            with open(path, encoding="utf-8") as f:
+                content = f.read()
+            self.assertIn("SUID Binary: /usr/bin/ntfs-3g", content)
+            self.assertIn("Reason: Requires further security review.", content)
+
 
 if __name__ == "__main__":
     unittest.main()
