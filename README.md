@@ -41,3 +41,21 @@ This tool is developed for educational and authorized security auditing purposes
 
 ## 10. Limitations
 The tool focuses on selected Linux privilege escalation misconfigurations. Its findings indicate potential risks and do not confirm that a vulnerability can be successfully exploited.
+
+## 11. Installation
+
+### Requirements
+- Kali Linux or Ubuntu Linux
+- Python 3
+- No external packages (the tool uses the Python standard library only)
+
+### Steps
+```bash
+git clone https://github.com/catalyst009/linux-privilege-escalation-checker.git
+cd linux-privilege-escalation-checker
+python3 --version
+pip install -r requirements.txt
+python3 main.py --help
+```
+
+`pip install -r requirements.txt` installs nothing extra because there are no external dependencies, but it keeps the setup the same if a package is added later. If `python3 main.py --help` prints the usage text, the installation worked.
