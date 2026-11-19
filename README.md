@@ -94,3 +94,38 @@ python3 main.py --scan all --output reports/
 - The default target is `localhost`, so the tool audits your own machine unless you choose a different target.
 - Use `--dry-run` first to see what a scan will do before running it.
 - Reports are saved locally in the output folder. Do not share them publicly, because they describe the weaknesses of a system.
+
+## 13. Rules of Engagement (RoE)
+
+These rules define how this tool may be used. By running the tool, the user agrees to follow them.
+
+### Authorized Scope
+- The tool may only be used on a system that the user owns, or on a system where the owner has given **explicit written permission**.
+- The default target is `localhost`. Any other target must be named in the written permission.
+- The tool asks the user to confirm authorization (`yes/no`) and to re-type the target before it starts. If authorization is not confirmed, the tool exits.
+
+### Time Windows
+- Scans may only run during the testing period agreed with the system owner, for example a maintenance window or a lab session.
+- Outside the agreed period, no scan should be run.
+- The tool does not enforce time windows. It is the user's responsibility to follow them.
+
+### Permitted Techniques
+- Reading system information.
+- Checking sudo permissions.
+- Listing SUID/SGID files.
+- Checking cron job permissions.
+- Saving the results as a TXT or JSON report in the local output folder.
+
+All checks are read-only and do not change the system.
+
+### Prohibited Actions
+- Scanning any system without authorization.
+- Using the findings to exploit a weakness or gain root access.
+- Changing, deleting, or creating files on the target system.
+- Sending reports or findings to anyone who is not the system owner or the testing team.
+- Publishing reports that contain details about a real system.
+
+### Emergency Stop
+- Press **Ctrl+C** at any time to stop the tool.
+- Answer **no** at the authorization prompt to exit before any scan starts.
+- If the tool behaves unexpectedly, stop it, do not run it again, and tell the system owner.
