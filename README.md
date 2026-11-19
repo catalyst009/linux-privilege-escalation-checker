@@ -59,3 +59,38 @@ python3 main.py --help
 ```
 
 `pip install -r requirements.txt` installs nothing extra because there are no external dependencies, but it keeps the setup the same if a package is added later. If `python3 main.py --help` prints the usage text, the installation worked.
+
+## 12. Usage
+
+### Options
+| Option | Description |
+|--------|-------------|
+| `--scan {all,sudo,suid,cron}` | Run a scan directly. If you leave it out, the interactive menu opens. |
+| `--target TARGET` | Hostname you are authorized to audit (default: `localhost`). |
+| `--format {txt,json}` | Report format. |
+| `--output OUTPUT` | Folder where reports are saved (default: `output/`). |
+| `--dry-run` | Show what would run, but scan nothing. |
+| `-h`, `--help` | Show the help message. |
+
+### Examples
+```bash
+# Open the interactive menu
+python3 main.py
+
+# Run all checks
+python3 main.py --scan all
+
+# Run only the sudo check and save a JSON report
+python3 main.py --scan sudo --format json
+
+# Preview the SUID check without scanning anything
+python3 main.py --scan suid --dry-run
+
+# Run all checks and save reports in a custom folder
+python3 main.py --scan all --output reports/
+```
+
+### Safe usage tips
+- The default target is `localhost`, so the tool audits your own machine unless you choose a different target.
+- Use `--dry-run` first to see what a scan will do before running it.
+- Reports are saved locally in the output folder. Do not share them publicly, because they describe the weaknesses of a system.
