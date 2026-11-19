@@ -152,3 +152,20 @@ If this tool finds a weakness on a system, or you find a bug in the tool itself,
 4. Keep the report file in the local output folder and share it only with the system owner.
 5. Do not try to exploit the weakness to "prove" it. The tool's findings show a potential risk, not a confirmed vulnerability.
 6. Delete your copy of the report when the owner has fixed the problem and you no longer need it.
+
+## 15. Screenshots
+
+### Startup, legal disclaimer, authorization and scan
+The tool shows the legal disclaimer (Computer Crimes Act 1997) and the Rules of Engagement, asks for authorization, confirms the scope (`localhost`), and then runs the checks.
+
+![Startup and scan](docs/01-startup-and-scan.png)
+
+### Kill switch
+Pressing `Ctrl+C` at any time stops the tool cleanly.
+
+![Kill switch](docs/02-kill-switch.png)
+
+### Sample report
+Each report shows the system information and the findings, with a risk level, details, reason, and fix for every finding.
+
+![Sample report](docs/03-sample-report.png)
